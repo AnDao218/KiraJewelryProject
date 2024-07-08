@@ -1,6 +1,7 @@
 package com.jewelry.KiraJewelry;
 
 import java.io.IOException;
+import io.github.cdimascio.dotenv.Dotenv;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -16,12 +17,9 @@ import com.jewelry.KiraJewelry.crawler.CrawlerService;
 public class KiraJewelryApplication {
 
 	@Autowired
-    private CrawlerService crawlerService; // This will be injected by Spring Boot
-
+	private CrawlerService crawlerService; // This will be injected by Spring Boot
 
 	public static void main(String[] args) {
-
-		
 
 		SpringApplication.run(KiraJewelryApplication.class, args);
 		// crawlerService.crawlAndSaveData();
