@@ -105,7 +105,7 @@ public class CustomerViewController {
         ProductionOrder latestProductionOrder = productionOrderService
                 .findLatestByCustomerIdAndStatusIn(customer.getCustomer_Id(), exactStatuses);
 
-        if (latestProductionOrder != null && latestProductionOrder.getProduct() != null) {
+        if (latestProductionOrder != null) {
             String status = latestProductionOrder.getStatus();
             String productionOrderId = latestProductionOrder.getProduction_Order_Id();
             int productId = latestProductionOrder.getProduct().getProduct_Id();
