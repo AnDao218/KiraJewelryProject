@@ -33,7 +33,7 @@ import com.jewelry.KiraJewelry.dto.Image;
 public class ImageService {
 
     private static final String BUCKET_NAME = "kirajewelry-a2n2k.appspot.com";
-    private static final String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/...lt=media";
+    private static final String DOWNLOAD_URL = "https://firebasestorage.googleapis.com/v0/b/kirajewelry-a2n2k.appspot.com/o/%s?alt=media";
 
     Dotenv dotenv = Dotenv.configure()
             .directory("src/main/resources")
@@ -67,11 +67,7 @@ public class ImageService {
             GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
             Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
             storage.create(blobInfo, Files.readAllBytes(file.toPath()));
-<<<<<<< HEAD
         }
-=======
-}
->>>>>>> 99d45ee856853e5d70ac7235057b103f49a70bb9
 
         return String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
     }
@@ -122,12 +118,8 @@ public class ImageService {
 
         return String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
     }
-<<<<<<< HEAD
 
     private String uploadFileForDiamond(File file, String fileName, String diamondId) throws IOException {
-=======
-private String uploadFileForDiamond(File file, String fileName, String diamondId) throws IOException {
->>>>>>> 99d45ee856853e5d70ac7235057b103f49a70bb9
         String folderName = "Diamond";
         String filePath = folderName + "/" + diamondId + "_" + fileName;
         BlobId blobId = BlobId.of(BUCKET_NAME, filePath);
@@ -185,7 +177,8 @@ private String uploadFileForDiamond(File file, String fileName, String diamondId
         String imageUrl = savedUrl.substring(6);
         return new Image(key, imageUrl);
     }
-private Image getImageByMaterialOrDiamondId(String savedUrl) {
+
+    private Image getImageByMaterialOrDiamondId(String savedUrl) {
         String key = savedUrl.substring(0, 1);
         String imageUrl = savedUrl.substring(1);
         return new Image(key, imageUrl);
@@ -263,7 +256,8 @@ private Image getImageByMaterialOrDiamondId(String savedUrl) {
 
     public String getImgByMaterialID(String materialId) throws IOException {
         List<String> listImg = listAllImages("Material");
-String filteredImages = null;
+
+        String filteredImages = null;
         for (String imgUrl : listImg) {
             if (imgUrl.contains("/Material%2F" + materialId + "_")) {
                 filteredImages = imgUrl;
@@ -347,11 +341,7 @@ String filteredImages = null;
             String url;
 
             if (folderName.equals("Customer_Production_Order")) {
-<<<<<<< HEAD
                 url = this.uploadFileForCustomerProductionOrder(file, fileName, key, productionOrderId);
-=======
-url = this.uploadFileForCustomerProductionOrder(file, fileName, key, productionOrderId);
->>>>>>> 99d45ee856853e5d70ac7235057b103f49a70bb9
             } else if (folderName.equals("Customer_Design")) {
                 url = this.uploadFileForDesignStaff(file, fileName, key, productionOrderId);
             } else if (folderName.equals("Customer_Progress_Photo")) {
