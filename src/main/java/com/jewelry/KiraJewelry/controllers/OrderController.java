@@ -345,4 +345,38 @@ public class OrderController {
         return "redirect:/userOrder";
     }
 
+    @GetMapping("/viewWarrantyPDF")
+    public String viewWarrantyPDF(@RequestParam("orderId") String orderId, Model model) throws IOException {
+        ProductionOrder productionOrder = productionOrderService.getProductionOrderById(orderId);
+        if (productionOrder == null) {
+            // Handle the case where the production order is not found
+            return "error";
+        }
+
+        String customerName = productionOrder.getCustomer().getFull_Name();
+        Customer customer = customerService.getCustomerIdByCustomerName(customerName);
+
+        ProductMaterial productMaterial = productMaterialService
+                .getProductMaterialByProduct_id(productionOrder.getProduct().getProduct_Id());
+        Diamond diamond = diamondService.getDiamondByProductId(productionOrder.getProduct().getProduct_Id());
+        Material material = materialService.getMaterialById(productMaterial.getId().getMaterial_Id());
+        Product product = productService.getProductById(productMaterial.getId().getProduct_Id());
+        String cateUrl = imageService
+                .getImgByCateogryID(String.valueOf(productionOrder.getCategory().getCategory_Id()));
+        String materialUrl = imageService
+                .getImgByMaterialID(String.valueOf(productMaterial.getId().getMaterial_Id()));
+        String diamondUrl = imageService.getImgByDiamondID(String.valueOf(diamond.getDia_Id()));
+
+        model.addAttribute("customer", customer);
+        model.addAttribute("productionOrder", productionOrder);
+        model.addAttribute("diamond", diamond);
+        model.addAttribute("product", product);
+        model.addAttribute("productMaterial", productMaterial);
+        model.addAttribute("material", material);
+        model.addAttribute("cateUrl", cateUrl);
+        model.addAttribute("materialUrl", materialUrl);
+        model.addAttribute("diamondUrl", diamondUrl);
+
+        return "customer/warrantyPDF/warranty";
+    }
 }

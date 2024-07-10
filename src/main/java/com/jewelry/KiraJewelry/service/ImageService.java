@@ -9,6 +9,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,13 @@ public class ImageService {
             .ignoreIfMissing()
             .load();
 
+    // Add to when run deploy
     private String firebaseURL = dotenv.get("GOOGLE_APPLICATION_CREDENTIALS");
+    // Add to when run local
+    // String firebaseServiceKey = dotenv.get("GOOGLE_APPLICATION_CREDENTIALS");
+    // String firebaseURL = Paths.get("src", "main", "resources", firebaseServiceKey).toString();
+    // Add to when run local
+
 
     private String uploadFile(File file, String fileName) throws IOException {
         BlobId blobId = BlobId.of(BUCKET_NAME, fileName);
@@ -57,7 +64,8 @@ public class ImageService {
         return String.format(DOWNLOAD_URL, URLEncoder.encode(fileName, StandardCharsets.UTF_8));
     }
 
-    private String uploadFileForCustomerProductionOrder(File file, String fileName, String customerId, String productionOrderId) throws IOException {
+    private String uploadFileForCustomerProductionOrder(File file, String fileName, String customerId,
+            String productionOrderId) throws IOException {
         String folderName = "Customer_Production_Order";
         String filePath = folderName + "/" + customerId + "_" + productionOrderId + "_" + fileName;
         BlobId blobId = BlobId.of(BUCKET_NAME, filePath);
@@ -72,10 +80,12 @@ public class ImageService {
         return String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
     }
 
-    private String uploadFileForDesignStaff(File file, String fileName, String designStaffId, String productionOrderId) throws IOException {
+    private String uploadFileForDesignStaff(File file, String fileName, String designStaffId, String productionOrderId)
+            throws IOException {
         String folderName = "Customer_Design";
         String subFolderName = designStaffId;
-        String filePath = folderName + "/" + subFolderName + "/" + designStaffId + "_" + productionOrderId + "_" + fileName;
+        String filePath = folderName + "/" + subFolderName + "/" + designStaffId + "_" + productionOrderId + "_"
+                + fileName;
         BlobId blobId = BlobId.of(BUCKET_NAME, filePath);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
 
@@ -88,10 +98,12 @@ public class ImageService {
         return String.format(DOWNLOAD_URL, URLEncoder.encode(filePath, StandardCharsets.UTF_8));
     }
 
-    private String uploadFileForProductionStaff(File file, String fileName, String productionStaffId, String productionOrderId) throws IOException {
+    private String uploadFileForProductionStaff(File file, String fileName, String productionStaffId,
+            String productionOrderId) throws IOException {
         String folderName = "Customer_Progress_Photo";
         String subFolderName = productionStaffId;
-        String filePath = folderName + "/" + subFolderName + "/" + productionStaffId + "_" + productionOrderId + "_" + fileName;
+        String filePath = folderName + "/" + subFolderName + "/" + productionStaffId + "_" + productionOrderId + "_"
+                + fileName;
         BlobId blobId = BlobId.of(BUCKET_NAME, filePath);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType("media").build();
 
@@ -333,7 +345,8 @@ public class ImageService {
         }
     }
 
-    public String uploadForProductionOrder(MultipartFile multipartFile, String folderName, String key, String productionOrderId) {
+    public String uploadForProductionOrder(MultipartFile multipartFile, String folderName, String key,
+            String productionOrderId) {
         try {
             String fileName = multipartFile.getOriginalFilename();
             fileName = UUID.randomUUID().toString().concat(this.getExtension(fileName));

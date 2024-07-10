@@ -134,7 +134,7 @@ public class ProductionOrderController {
         if (oldProductMaterial != null) {
             Material oldMaterial = materialService.getMaterialById(oldProductMaterial.getId().getMaterial_Id());
             session.setAttribute("material", oldMaterial);
-            
+
         }
         Diamond oldDiamond = diamondService.getDiamondByProductId(product.getProduct_Id());
         List<Diamond> listDiamonds = diamondService.getAllDiamonds();
@@ -170,7 +170,7 @@ public class ProductionOrderController {
         List<Material> material = materialService.findByName(materialName);
         List<MaterialPriceList> listPrice = new ArrayList<>();
         for (Material m : material) {
-            MaterialPriceList mpl = materialPriceListService.getMaterialPriceListByMaterialId(m.getMaterial_Id());
+            MaterialPriceList mpl = materialPriceListService.getLatestPriceByMaterialId(m.getMaterial_Id());
             listPrice.add(mpl);
         }
         String message = "Search for material name : " + materialName;
@@ -268,7 +268,7 @@ public class ProductionOrderController {
             productMaterial.setMaterial_Weight(materialWeight);
 
             int materialId = productMaterial.getId().getMaterial_Id();
-            MaterialPriceList mpl = materialPriceListService.getMaterialPriceListByMaterialId(materialId);
+            MaterialPriceList mpl = materialPriceListService.getLatestPriceByMaterialId(materialId);
             double materialPrice = mpl.getPrice();
             double productionOrderMaterialPrice = materialPrice * materialWeight;
             productionOrder.setQ_Material_Amount(productionOrderMaterialPrice);
@@ -321,25 +321,7 @@ public class ProductionOrderController {
             if (diamond == null || diamond.isEmpty()) {
                 model.addAttribute("messageDiamond", "Please select valid values to find diamond !");
             } else {
-                List<Diamond> listDiamonds = diamondService.getAllDiamonds();
 
-                // Extract unique values for dropdowns
-                Set<String> origins = listDiamonds.stream().map(Diamond::getOrigin).collect(Collectors.toSet());
-                Set<String> colors = listDiamonds.stream().map(Diamond::getColor).collect(Collectors.toSet());
-                Set<String> clarities = listDiamonds.stream().map(Diamond::getClarity).collect(Collectors.toSet());
-                Set<String> cuts = listDiamonds.stream().map(Diamond::getCut).collect(Collectors.toSet());
-
-                model.addAttribute("listDiamonds", listDiamonds);
-                model.addAttribute("origins", origins);
-                model.addAttribute("colors", colors);
-                model.addAttribute("clarities", clarities);
-                model.addAttribute("cuts", cuts);
-                model.addAttribute("diamondName", diamondName);
-                model.addAttribute("caratWeight", caratWeight);
-                model.addAttribute("color", color);
-                model.addAttribute("clarity", clarity);
-                model.addAttribute("cut", cut);
-                model.addAttribute("origin", origin);
                 model.addAttribute("diamonds", diamond);
 
                 List<DiamondPriceList> diamondPriceList = new ArrayList<>();
@@ -360,6 +342,25 @@ public class ProductionOrderController {
 
             }
         }
+        List<Diamond> listDiamonds = diamondService.getAllDiamonds();
+
+        // Extract unique values for dropdowns
+        Set<String> origins = listDiamonds.stream().map(Diamond::getOrigin).collect(Collectors.toSet());
+        Set<String> colors = listDiamonds.stream().map(Diamond::getColor).collect(Collectors.toSet());
+        Set<String> clarities = listDiamonds.stream().map(Diamond::getClarity).collect(Collectors.toSet());
+        Set<String> cuts = listDiamonds.stream().map(Diamond::getCut).collect(Collectors.toSet());
+
+        model.addAttribute("listDiamonds", listDiamonds);
+        model.addAttribute("origins", origins);
+        model.addAttribute("colors", colors);
+        model.addAttribute("clarities", clarities);
+        model.addAttribute("cuts", cuts);
+        model.addAttribute("diamondName", diamondName);
+        model.addAttribute("caratWeight", caratWeight);
+        model.addAttribute("color", color);
+        model.addAttribute("clarity", clarity);
+        model.addAttribute("cut", cut);
+        model.addAttribute("origin", origin);
         model.addAttribute("productionOrder", productionOrder);
         model.addAttribute("product", productionOrder.getProduct());
         return "employee/sales_staff/findIngredientsPage";
